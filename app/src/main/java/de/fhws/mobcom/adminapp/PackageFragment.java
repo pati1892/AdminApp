@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import de.fhws.mobcom.adminapp.Adapter.PackageAdapter;
 import de.fhws.mobcom.adminapp.Adapter.StringAdapter;
 import de.fhws.mobcom.adminapp.Helper.PackageHelper;
 import de.fhws.mobcom.adminapp.Model.Package;
@@ -22,7 +24,7 @@ import de.fhws.mobcom.adminapp.Model.Package;
 
 public class PackageFragment extends ListFragment {
 
-    static final Uri CONTENT_URL = Uri.parse( "content://de.fhws.mobcom.adminapp.AppProvider/apps" );
+    static final Uri CONTENT_URL = Uri.parse( "content://de.fhws.mobcom.adminapp.PackageProvider/apps" );
 
     private ContentResolver mResolver;
     private ArrayList<Package> mHiddenPackages;
@@ -39,7 +41,17 @@ public class PackageFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ){
-        StringAdapter adapter = new StringAdapter( getContext(), PackageHelper.INSTALLED( getContext() ) );
+        ArrayList<Package> packages = PackageHelper.INSTALLED( getContext() );
+        ArrayList<Package> hidden = getHiddenPackages();
+
+        for( Package pack : packages ){
+            for( Package hid : hidden ){
+                if( pack.mName == hid.mName )
+                    pack.mIsHidden = true;
+            }
+        }
+
+        PackageAdapter adapter = new PackageAdapter( getContext(), packages );
         setListAdapter( adapter );
 
         return super.onCreateView( inflater, container, savedInstanceState );
@@ -57,7 +69,7 @@ public class PackageFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id ){
-
+        Log.d( "PackageFragment:", "Item clicked.");
     }
 
     private ArrayList<Package> getHiddenPackages(){
@@ -71,8 +83,9 @@ public class PackageFragment extends ListFragment {
         do {
             String id = cursor.getString( cursor.getColumnIndex( "id" ) );
             String name = cursor.getString( cursor.getColumnIndex( " name" ) );
+            String label = cursor.getString( cursor.getColumnIndex( "label" ) );
 
-            Package app = new Package( id, name );
+            Package app = new Package( id, name, label, null );
             toReturn.add( app );
         } while( cursor.moveToNext() );
 
