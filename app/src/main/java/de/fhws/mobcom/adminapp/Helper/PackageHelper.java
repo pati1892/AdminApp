@@ -23,7 +23,12 @@ public class PackageHelper {
         List<PackageInfo> packages = pm.getInstalledPackages( PackageManager.GET_META_DATA );
 
         for( PackageInfo curInfo : packages ){
-            Package curPackage = new Package(null, curInfo.packageName, (String) pm.getApplicationLabel( curInfo.applicationInfo ), pm.getApplicationIcon( curInfo.applicationInfo ) );
+            Package curPackage = new Package(
+                    null,
+                    curInfo.packageName,
+                    (String) pm.getApplicationLabel( curInfo.applicationInfo ),
+                    pm.getApplicationIcon( curInfo.applicationInfo )
+            );
             toReturn.add( curPackage );
         }
 

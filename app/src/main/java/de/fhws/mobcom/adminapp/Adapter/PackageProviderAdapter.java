@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ import de.fhws.mobcom.adminapp.Model.Package;
 
 public class PackageProviderAdapter {
 
+    private static final String TAG = PackageProviderAdapter.class.getSimpleName();
     private static final Uri CONTENT_URL = Uri.parse( "content://de.fhws.mobcom.adminapp.PackageProvider/apps" );
 
     private Context mContext;
@@ -49,13 +51,27 @@ public class PackageProviderAdapter {
             mPackages.add( pack );
 
         } while( cursor.moveToNext() );
+
+        printCurrentPackages();
     }
 
-    public boolean has( Package pack ){
+    private void printCurrentPackages(){
         int max = mPackages.size();
         for( int i = 0 ; i < max ; i++ ){
             Package cur = mPackages.get( i );
-            if( cur.mName == pack.mName )
+            Log.d( TAG, "Name: " + cur.mName + ", Label: " + cur.mLabel );
+        }
+    }
+
+    public boolean has( Package pack ){
+        return has( pack.mName );
+    }
+
+    public boolean has( String name ){
+        int max = mPackages.size();
+        for( int i = 0 ; i < max ; i++ ){
+            Package cur = mPackages.get( i );
+            if( cur.mName.equals( name ) )
                 return true;
         }
         return false;
@@ -65,9 +81,21 @@ public class PackageProviderAdapter {
         return mPackages;
     }
 
+    public Package getByName( String name ){
+        int max = mPackages.size();
+        for( int i = 0 ; i < max ; i++ ){
+            Package cur = mPackages.get( i );
+            if( cur.mName == name )
+                return cur;
+        }
+        return null;
+    }
+
     public void insert( Package pack ){
         if( has( pack ) )
             return;
+
+        Log.d( TAG, "Inserting..." );
 
         ContentValues values = new ContentValues();
         values.put( "name", pack.mName );
@@ -78,12 +106,11 @@ public class PackageProviderAdapter {
         init();
     }
 
-    public void delete( Package pack ){
-        if( !has( pack ) )
-            return;
+    public void delete( String name ){
+        Package toDelete = getByName( name );
 
         String selection = "id = ?";
-        String[] selectionArgs = { pack.mId };
+        String[] selectionArgs = { toDelete.mId };
 
         mContentResolver.delete( CONTENT_URL, selection, selectionArgs );
 

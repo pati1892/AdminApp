@@ -32,16 +32,10 @@ public class PackageFragment extends ListFragment {
 
     private PackageProviderAdapter mProviderAdapter;
 
-    private ArrayList<Package> mHiddenPackages;
-    private int mCurSelected = -1;
-
     @Override
     public void onCreate( Bundle savedInstanceState ){
         super.onCreate( savedInstanceState );
-
         mProviderAdapter = new PackageProviderAdapter( getContext() );
-        mHiddenPackages = getHiddenPackages();
-
     }
 
     @Override
@@ -74,37 +68,27 @@ public class PackageFragment extends ListFragment {
         String name = appName.getText().toString();
         String label = appLabel.getText().toString();
 
-        if( isPackageHidden( name ) ){
+        if( mProviderAdapter.has( name ) ){
             // uncheck
             appHidden.setChecked( false );
-            mProviderAdapter.delete( new Package( ) );
+            mProviderAdapter.delete( name );
         } else {
             // check
             appHidden.setChecked( true );
-            // & add to hidden packages
             mProviderAdapter.insert( new Package( null, name, label, null ) );
         }
-    }
-
-    private Boolean isPackageHidden( String name ){
-        int max = mHiddenPackages.size();
-        for( int i = 0 ; i < max ; i++ ){
-            Package cur = mHiddenPackages.get( i );
-            if( cur.mName == name )
-                return true;
-        }
-        return false;
     }
 
     private void renewListAdapter(){
         ArrayList<Package> packages = PackageHelper.INSTALLED( getContext() );
         ArrayList<Package> hidden = mProviderAdapter.getAll();
 
+        Log.d( TAG, "Installed apps: " + packages.size() );
+        Log.d( TAG, "Hidden apps: " + hidden.size() );
+
         for( Package pack : packages ){
-            for( Package hid : hidden ){
-                if( pack.mName == hid.mName )
-                    pack.mIsHidden = true;
-            }
+            if( mProviderAdapter.has( pack.mName ) )
+                pack.mIsHidden = true;
         }
 
         PackageAdapter adapter = new PackageAdapter( getContext(), packages );

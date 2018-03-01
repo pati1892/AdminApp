@@ -1,6 +1,7 @@
 package de.fhws.mobcom.adminapp.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import de.fhws.mobcom.adminapp.Model.Package;
 
 public class PackageAdapter extends ArrayAdapter<Package> {
 
-    public PackageAdapter(Context context, ArrayList<Package> packages) {
+    private static final String TAG = PackageAdapter.class.getSimpleName();
+
+    public PackageAdapter(Context context, ArrayList<Package> packages ) {
         super( context, 0, packages );
     }
 
@@ -41,9 +44,11 @@ public class PackageAdapter extends ArrayAdapter<Package> {
         TextView appName = ( TextView ) convertView.findViewById( R.id.appName );
         appName.setText( item.mName );
 
+        CheckBox appHidden = ( CheckBox ) convertView.findViewById(R.id.appChecked);
         if( item.mIsHidden ) {
-            CheckBox appHidden = (CheckBox) convertView.findViewById(R.id.appChecked);
-            appHidden.setChecked(true);
+            appHidden.setChecked( true );
+        } else {
+            appHidden.setChecked( false );
         }
 
         return convertView;
