@@ -1,4 +1,4 @@
-package de.fhws.mobcom.adminapp.Model;
+package de.fhws.mobcom.adminapp.model;
 
 import android.graphics.drawable.Drawable;
 

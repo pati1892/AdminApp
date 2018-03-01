@@ -1,10 +1,6 @@
 package de.fhws.mobcom.adminapp;
 
 import android.app.ListFragment;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +12,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import de.fhws.mobcom.adminapp.Adapter.PackageAdapter;
-import de.fhws.mobcom.adminapp.Adapter.PackageProviderAdapter;
-import de.fhws.mobcom.adminapp.Adapter.StringAdapter;
-import de.fhws.mobcom.adminapp.Helper.PackageHelper;
-import de.fhws.mobcom.adminapp.Model.Package;
+import de.fhws.mobcom.adminapp.adapter.PackageAdapter;
+import de.fhws.mobcom.adminapp.adapter.PackageProviderAdapter;
+import de.fhws.mobcom.adminapp.helper.PackageHelper;
+import de.fhws.mobcom.adminapp.model.Package;
 
 /**
  * Created by kanga on 27.02.2018.

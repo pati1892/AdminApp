@@ -2,19 +2,14 @@ package de.fhws.mobcom.adminapp;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ProviderTestCase2;
 
-import junit.framework.TestResult;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import de.fhws.mobcom.adminapp.Model.Package;
 
 /**
  * Created by kanga on 28.02.2018.

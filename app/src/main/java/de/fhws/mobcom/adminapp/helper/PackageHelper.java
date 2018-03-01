@@ -1,4 +1,4 @@
-package de.fhws.mobcom.adminapp.Helper;
+package de.fhws.mobcom.adminapp.helper;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -6,9 +6,8 @@ import android.content.pm.PackageManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes;
 
-import de.fhws.mobcom.adminapp.Model.Package;
+import de.fhws.mobcom.adminapp.model.Package;
 
 /**
  * Created by kanga on 27.02.2018.

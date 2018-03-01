@@ -1,7 +1,6 @@
-package de.fhws.mobcom.adminapp.Adapter;
+package de.fhws.mobcom.adminapp.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.fhws.mobcom.adminapp.R;
-import de.fhws.mobcom.adminapp.Model.Package;
+import de.fhws.mobcom.adminapp.model.Package;
 
 /**
  * Created by kanga on 28.02.2018.

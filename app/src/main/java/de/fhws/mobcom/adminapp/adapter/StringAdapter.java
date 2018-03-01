@@ -1,4 +1,4 @@
-package de.fhws.mobcom.adminapp.Adapter;
+package de.fhws.mobcom.adminapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package de.fhws.mobcom.adminapp.Adapter;
+package de.fhws.mobcom.adminapp.adapter;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -9,7 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import de.fhws.mobcom.adminapp.Model.Package;
+import de.fhws.mobcom.adminapp.model.Package;
 
 /**
  * Created by kanga on 01.03.2018.
