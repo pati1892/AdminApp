@@ -107,6 +107,9 @@ public class PackageProviderAdapter {
     }
 
     public void delete( String name ){
+        if( !has( name ) )
+            return;
+
         Package toDelete = getByName( name );
 
         String selection = "id = ?";
