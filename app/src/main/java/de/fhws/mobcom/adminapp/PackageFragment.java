@@ -2,6 +2,7 @@ package de.fhws.mobcom.adminapp;
 
 import android.app.ListFragment;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,11 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import de.fhws.mobcom.adminapp.Adapter.PackageAdapter;
+import de.fhws.mobcom.adminapp.Adapter.PackageProviderAdapter;
 import de.fhws.mobcom.adminapp.Adapter.StringAdapter;
 import de.fhws.mobcom.adminapp.Helper.PackageHelper;
 import de.fhws.mobcom.adminapp.Model.Package;
@@ -24,9 +28,10 @@ import de.fhws.mobcom.adminapp.Model.Package;
 
 public class PackageFragment extends ListFragment {
 
-    static final Uri CONTENT_URL = Uri.parse( "content://de.fhws.mobcom.adminapp.PackageProvider/apps" );
+    private static final String TAG = PackageFragment.class.getSimpleName();
 
-    private ContentResolver mResolver;
+    private PackageProviderAdapter mProviderAdapter;
+
     private ArrayList<Package> mHiddenPackages;
     private int mCurSelected = -1;
 
@@ -34,25 +39,14 @@ public class PackageFragment extends ListFragment {
     public void onCreate( Bundle savedInstanceState ){
         super.onCreate( savedInstanceState );
 
-        mResolver = getContext().getContentResolver();
+        mProviderAdapter = new PackageProviderAdapter( getContext() );
         mHiddenPackages = getHiddenPackages();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ){
-        ArrayList<Package> packages = PackageHelper.INSTALLED( getContext() );
-        ArrayList<Package> hidden = getHiddenPackages();
-
-        for( Package pack : packages ){
-            for( Package hid : hidden ){
-                if( pack.mName == hid.mName )
-                    pack.mIsHidden = true;
-            }
-        }
-
-        PackageAdapter adapter = new PackageAdapter( getContext(), packages );
-        setListAdapter( adapter );
+        renewListAdapter();
 
         return super.onCreateView( inflater, container, savedInstanceState );
     }
@@ -69,42 +63,51 @@ public class PackageFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id ){
-        Log.d( "PackageFragment:", "Item clicked.");
+        Log.d( TAG, "Item clicked.");
+
+        // get package to view
+        TextView appName = (TextView) view.findViewById( R.id.appName );
+        TextView appLabel = ( TextView ) view.findViewById( R.id.appLabel );
+        CheckBox appHidden = ( CheckBox ) view.findViewById( R.id.appChecked );
+
+        // appname
+        String name = appName.getText().toString();
+        String label = appLabel.getText().toString();
+
+        if( isPackageHidden( name ) ){
+            // uncheck
+            appHidden.setChecked( false );
+            mProviderAdapter.delete( new Package( ) );
+        } else {
+            // check
+            appHidden.setChecked( true );
+            // & add to hidden packages
+            mProviderAdapter.insert( new Package( null, name, label, null ) );
+        }
     }
 
-    private ArrayList<Package> getHiddenPackages(){
-        String[] projection = new String[]{ "id", "name" };
-        Cursor cursor = mResolver.query( CONTENT_URL, projection, null, null, null );
-        ArrayList<Package> toReturn = new ArrayList<Package>();
-
-        if( !cursor.moveToFirst() )
-            return toReturn;
-
-        do {
-            String id = cursor.getString( cursor.getColumnIndex( "id" ) );
-            String name = cursor.getString( cursor.getColumnIndex( " name" ) );
-            String label = cursor.getString( cursor.getColumnIndex( "label" ) );
-
-            Package app = new Package( id, name, label, null );
-            toReturn.add( app );
-        } while( cursor.moveToNext() );
-
-        return toReturn;
+    private Boolean isPackageHidden( String name ){
+        int max = mHiddenPackages.size();
+        for( int i = 0 ; i < max ; i++ ){
+            Package cur = mHiddenPackages.get( i );
+            if( cur.mName == name )
+                return true;
+        }
+        return false;
     }
 
-    private void deleteApp( String id ){
+    private void renewListAdapter(){
+        ArrayList<Package> packages = PackageHelper.INSTALLED( getContext() );
+        ArrayList<Package> hidden = mProviderAdapter.getAll();
 
-        long rowId = mResolver.delete( CONTENT_URL, "id = ?", new String[]{ id } );
-        mHiddenPackages = getHiddenPackages();
-    }
+        for( Package pack : packages ){
+            for( Package hid : hidden ){
+                if( pack.mName == hid.mName )
+                    pack.mIsHidden = true;
+            }
+        }
 
-    private void insertApp( String name ){
-        //long rowId = mResolver.insert( CONTENT_URL, )
-    }
-
-    private Package currentlySelected(){
-        if( mCurSelected < 0 )
-            return null;
-        return mHiddenPackages.get( mCurSelected );
+        PackageAdapter adapter = new PackageAdapter( getContext(), packages );
+        setListAdapter( adapter );
     }
 }
