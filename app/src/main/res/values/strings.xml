@@ -1,7 +1,3 @@
 <resources>
     <string name="app_name">AdminApp</string>
-    <string name="KEY_DISABLE_WIFI">KEY_DISABLE_WIFI</string>
-    <string name="KEY_DISABLE_BLUETOOTH">KEY_DISABLE_BLUETOOTH</string>
-    <string name="KEY_DISABLE_NFC">KEY_DISABLE_NFC</string>
-    <string name="KEY_HIDDEN_APPS">KEY_HIDDEN_APPS</string>
 </resources>

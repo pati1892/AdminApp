@@ -8,15 +8,15 @@ import android.graphics.drawable.Drawable;
 
 public class Package {
     public String mId;
-    public String mName;
-    public String mLabel;
+    public String mPackageName;
+    public String mApplicationName;
     public Drawable mIcon;
     public boolean mIsHidden;
 
-    public Package( String id, String name, String label, Drawable icon ){
+    public Package( String id, String packageName, String applicationName, Drawable icon ){
         mId = id;
-        mName = name;
-        mLabel = label;
+        mPackageName = packageName;
+        mApplicationName = applicationName;
         mIcon = icon;
         mIsHidden = false;
     }

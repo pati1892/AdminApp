@@ -1,6 +1,11 @@
 package de.fhws.mobcom.adminapp;
 
 import android.app.ListFragment;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,10 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.fhws.mobcom.adminapp.adapter.PackageAdapter;
 import de.fhws.mobcom.adminapp.adapter.PackageProviderAdapter;
-import de.fhws.mobcom.adminapp.helper.PackageHelper;
 import de.fhws.mobcom.adminapp.model.Package;
 
 /**
@@ -26,11 +31,12 @@ public class PackageFragment extends ListFragment {
     private static final String TAG = PackageFragment.class.getSimpleName();
 
     private PackageProviderAdapter mProviderAdapter;
-
+    private PackageManager mManager;
     @Override
     public void onCreate( Bundle savedInstanceState ){
         super.onCreate( savedInstanceState );
         mProviderAdapter = new PackageProviderAdapter( getContext() );
+        mManager = this.getContext().getPackageManager();
     }
 
     @Override
@@ -65,28 +71,41 @@ public class PackageFragment extends ListFragment {
 
         if( mProviderAdapter.has( name ) ){
             // uncheck
+            Log.d(TAG, name);
             appHidden.setChecked( false );
-            mProviderAdapter.delete( name );
+            mProviderAdapter.disable( name );
         } else {
             // check
             appHidden.setChecked( true );
-            mProviderAdapter.insert( new Package( null, name, label, null ) );
+            mProviderAdapter.enable( name);
         }
     }
 
     private void renewListAdapter(){
-        ArrayList<Package> packages = PackageHelper.INSTALLED( getContext() );
-        ArrayList<Package> hidden = mProviderAdapter.getAll();
-
-        Log.d( TAG, "Installed apps: " + packages.size() );
-        Log.d( TAG, "Hidden apps: " + hidden.size() );
-
-        for( Package pack : packages ){
-            if( mProviderAdapter.has( pack.mName ) )
-                pack.mIsHidden = true;
+        //ArrayList<PackageInfo> packages = (ArrayList<PackageInfo>)mManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+        ArrayList<ApplicationInfo> packagesHaveActivity = new ArrayList<>();
+        /*for (PackageInfo p : packages){
+            if(p.) packagesHaveActivity.add(p);
+        }*/
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> resolveInfoList = mManager.queryIntentActivities(mainIntent, 0);
+        for(ResolveInfo info : resolveInfoList){
+            if(info == null || info.activityInfo.applicationInfo == null) continue;
+            packagesHaveActivity.add(info.activityInfo.applicationInfo);
         }
 
-        PackageAdapter adapter = new PackageAdapter( getContext(), packages );
+        //ArrayList<ApplicationInfo> hidden = mProviderAdapter.getAll();
+
+        Log.d( TAG, "Installed apps: " + packagesHaveActivity.size() );
+        //Log.d( TAG, "Hidden apps: " + hidden.size() );
+
+        /*for( ApplicationInfo pack : packages ){
+            if( mProviderAdapter.has( pack.mName ) )
+                pack.mIsHidden = true;
+        }*/
+
+        PackageAdapter adapter = new PackageAdapter( getContext(), packagesHaveActivity );
         setListAdapter( adapter );
     }
 }
