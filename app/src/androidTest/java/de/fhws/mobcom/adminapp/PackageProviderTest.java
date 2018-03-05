@@ -36,13 +36,14 @@ public class PackageProviderTest extends ProviderTestCase2<PackageProvider> {
         // create data
         ContentValues values = new ContentValues();
         values.put( "name", "com.android.bla" );
+        values.put( "label", "Bla" );
 
         // insert
         ContentProvider provider = getProvider();
         provider.insert( PackageProvider.CONTENT_URL, values );
 
         // check if valid
-        Cursor cursor = provider.query( PackageProvider.CONTENT_URL, new String[]{ "id", "name" }, null, null, null );
+        Cursor cursor = provider.query( PackageProvider.CONTENT_URL, new String[]{ "id", "name", "label" }, null, null, null );
         cursor.moveToNext();
         String name = cursor.getString( cursor.getColumnIndex( "name" ) );
 
@@ -61,7 +62,7 @@ public class PackageProviderTest extends ProviderTestCase2<PackageProvider> {
         provider.delete( PackageProvider.CONTENT_URL, selection, selectionArgs );
 
         // check if valid
-        Cursor cursor = provider.query( PackageProvider.CONTENT_URL, new String[]{ "id", "name" }, null, null, null );
+        Cursor cursor = provider.query( PackageProvider.CONTENT_URL, new String[]{ "id", "name", "label" }, null, null, null );
         assertEquals( cursor.moveToNext(), false );
     }
 
@@ -71,15 +72,17 @@ public class PackageProviderTest extends ProviderTestCase2<PackageProvider> {
         // insert a few
         ContentValues one = new ContentValues();
         one.put( "name", "com.fhws.bla" );
+        one.put( "label", "Bla" );
 
         ContentValues two = new ContentValues();
         two.put( "name", "com.biermaster.pfandmaster3000" );
+        two.put( "label", "Pfandmaster 3000" );
 
         ContentProvider provider = getProvider();
         provider.insert( PackageProvider.CONTENT_URL, one );
         provider.insert( PackageProvider.CONTENT_URL, two );
 
-        Cursor cursor = provider.query( PackageProvider.CONTENT_URL, new String[]{ "id", "name" }, null, null, null );
+        Cursor cursor = provider.query( PackageProvider.CONTENT_URL, new String[]{ "id", "name", "label" }, null, null, null );
         cursor.moveToNext();
 
         String nameOne = cursor.getString( cursor.getColumnIndex( "name" ) );

@@ -52,7 +52,7 @@ public class PackageProviderAdapter {
 
         } while( cursor.moveToNext() );
 
-        printCurrentPackages();
+        //printCurrentPackages();
     }
 
     private void printCurrentPackages(){
@@ -85,7 +85,7 @@ public class PackageProviderAdapter {
         int max = mPackages.size();
         for( int i = 0 ; i < max ; i++ ){
             Package cur = mPackages.get( i );
-            if( cur.mName == name )
+            if( cur.mName.equals( name ) )
                 return cur;
         }
         return null;

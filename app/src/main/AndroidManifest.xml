@@ -12,16 +12,19 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".PackageActivity">
+
         </activity>
 
         <provider
             android:name=".PackageProvider"
             android:authorities="de.fhws.mobcom.adminapp.PackageProvider"
             android:exported="true"
-            android:multiprocess="true"></provider>
+            android:multiprocess="true"
+            />
     </application>
 
 </manifest>

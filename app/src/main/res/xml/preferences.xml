@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Connectivity - disable permanently">
+
+        <CheckBoxPreference
+            android:key="key_disable_wifi"
+            android:title="Wifi"
+            />
+
+        <CheckBoxPreference
+            android:key="key_disable_bluetooth"
+            android:title="Bluetooth"
+            />
+
+        <CheckBoxPreference
+            android:key="key_disable_nfc"
+            android:title="NFC"
+            />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Hidden apps">
+
+        <Preference
+            android:key="key_hidden_apps"
+            android:title="Click..."
+            />
+    </PreferenceCategory>
+</PreferenceScreen>
